@@ -1,0 +1,4 @@
+server:
+  name: 学生成绩管理
+  host: 127.0.0.1
+  port: 23333
