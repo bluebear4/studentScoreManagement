@@ -7,22 +7,47 @@ import (
 )
 
 type Config struct {
-	*Server
+	Server   *server
+	Database *database
+	Redis    *redis
 }
 
-type Server struct {
+type server struct {
 	Name string `yaml:"name"`
 	Host string `yaml:"host"`
 	Port string `yaml:"port"`
 }
 
-var config Config
-
-func GetConfig() Config {
-	return config
+type database struct {
+	Username string `yaml:"username"`
+	Password string `yaml:"password"`
+	Host     string `yaml:"host"`
+	Port     string `yaml:"port"`
+	Dbname   string `yaml:"dbname"`
+	Timeout  string `yaml:"timeout"`
 }
 
-func init() {
+type redis struct {
+	Password string `yaml:"password"`
+	Host     string `yaml:"host"`
+	Port     string `yaml:"port"`
+}
+
+var config Config
+
+func GetServer() server {
+	return *config.Server
+}
+
+func GetDatabase() database {
+	return *config.Database
+}
+
+func GetRedis() redis {
+	return *config.Redis
+}
+
+func InitConfig() {
 	viper.SetConfigName("config")
 	viper.SetConfigType("yaml")
 	viper.AddConfigPath("./config")
