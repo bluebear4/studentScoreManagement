@@ -5,12 +5,13 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
+	"net/http"
 	"studentScoreManagement/config"
+	"studentScoreManagement/consts"
 	"studentScoreManagement/db"
-	"studentScoreManagement/handle"
-	"studentScoreManagement/handle/user"
 	"studentScoreManagement/model"
 	"studentScoreManagement/redis"
+	"studentScoreManagement/user"
 )
 
 func init() {
@@ -22,22 +23,22 @@ func init() {
 	}
 	//hard code 设定角色
 	role := model.Role{
-		RoleID:   "0",
-		RoleName: "admin",
+		RoleID:   consts.RoleIDAdmin,
+		RoleName: consts.RoleNameAdmin,
 	}
 	if err := role.Find(); errors.Is(err, gorm.ErrRecordNotFound) {
 		roles := []*model.Role{
 			{
-				RoleID:   "0",
-				RoleName: "admin",
+				RoleID:   consts.RoleIDAdmin,
+				RoleName: consts.RoleNameAdmin,
 			},
 			{
-				RoleID:   "1",
-				RoleName: "teacher",
+				RoleID:   consts.RoleIDTeacher,
+				RoleName: consts.RoleNameTeacher,
 			},
 			{
-				RoleID:   "2",
-				RoleName: "student",
+				RoleID:   consts.RoleIDStudent,
+				RoleName: consts.RoleNameStudent,
 			},
 		}
 		for _, role := range roles {
@@ -49,13 +50,12 @@ func init() {
 
 func main() {
 	server := gin.Default()
-	server.GET("/ping", handle.Ping)
+	server.GET("/ping", func(c *gin.Context) {
+		c.JSON(http.StatusOK, "pong")
+		return
+	})
 
-	User := server.Group("/user")
-	{
-		User.POST("/register", user.Register)
-		User.POST("/login", user.Login)
-	}
+	user.Route(server)
 
 	if err := server.Run(config.GetServer().Host + ":" + config.GetServer().Port); err != nil {
 		panic(fmt.Errorf("服务运行失败 %s", err))

@@ -7,18 +7,18 @@ import (
 )
 
 type Config struct {
-	Server   *server
-	Database *database
-	Redis    *redis
+	Server   *Server
+	Database *Database
+	Redis    *Redis
 }
 
-type server struct {
+type Server struct {
 	Name string `yaml:"name"`
 	Host string `yaml:"host"`
 	Port string `yaml:"port"`
 }
 
-type database struct {
+type Database struct {
 	Username string `yaml:"username"`
 	Password string `yaml:"password"`
 	Host     string `yaml:"host"`
@@ -27,7 +27,7 @@ type database struct {
 	Timeout  string `yaml:"timeout"`
 }
 
-type redis struct {
+type Redis struct {
 	Password string `yaml:"password"`
 	Host     string `yaml:"host"`
 	Port     string `yaml:"port"`
@@ -35,15 +35,15 @@ type redis struct {
 
 var config Config
 
-func GetServer() server {
+func GetServer() Server {
 	return *config.Server
 }
 
-func GetDatabase() database {
+func GetDatabase() Database {
 	return *config.Database
 }
 
-func GetRedis() redis {
+func GetRedis() Redis {
 	return *config.Redis
 }
 
