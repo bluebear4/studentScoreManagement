@@ -28,3 +28,7 @@ func Set(key, value string, timeout time.Duration) error {
 func Get(key string) (string, error) {
 	return rdb.Get(key).Result()
 }
+
+func Del(key string) error {
+	return rdb.Del(key).Err()
+}

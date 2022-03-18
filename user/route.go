@@ -2,20 +2,22 @@ package user
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
-	"studentScoreManagement/config"
 	"studentScoreManagement/consts"
-	"studentScoreManagement/redis"
+	"studentScoreManagement/middleware"
 	"studentScoreManagement/util"
-	"time"
 )
 
 func Route(server *gin.Engine) {
-	User := server.Group("/user")
+	user := server.Group("/user")
 	{
-		User.POST("/register", register)
-		User.POST("/login", login)
-		User.POST("/changePassword", changePassword)
+		user.POST("/register", register)
+		user.POST("/login", login)
+		user.POST("/logout", middleware.Auth(map[int]bool{
+			consts.RoleIDStudent: true,
+			consts.RoleIDTeacher: true,
+			consts.RoleIDAdmin:   true,
+		}), logout)
+		user.POST("/changePassword", changePassword)
 	}
 }
 
@@ -28,16 +30,12 @@ func register(ctx *gin.Context) {
 	}
 
 	response := server.CreateUser(ctx, req)
-	if response.Base.Code == consts.ErrCodeSuccess {
-		//设置cookie
-		if _, err := ctx.Cookie(consts.CookieAuth); err != nil {
-			uuid := uuid.New().String()
-			ctx.SetCookie(consts.CookieAuth, uuid, -1, "/", config.GetServer().Host, true, true)
-			_ = redis.Set(uuid, req.UserName, 1*time.Hour)
-		}
-	}
-	ctx.JSON(response.Base.ChangeToGinJson())
 
+	if response.Base.Code == consts.ErrCodeSuccess {
+		//注册后自动登录
+		util.Login(ctx, req.ID)
+	}
+	ctx.JSON(response.Base.ChangeToGinJson(gin.H{"ID": response.UserID}))
 }
 
 func login(ctx *gin.Context) {
@@ -50,15 +48,16 @@ func login(ctx *gin.Context) {
 
 	response := server.ValidatePassword(ctx, req)
 	if response.Base.Code == consts.ErrCodeSuccess {
-		//设置cookie
-		if _, err := ctx.Cookie(consts.CookieAuth); err != nil {
-			uuid := uuid.New().String()
-			ctx.SetCookie(consts.CookieAuth, uuid, -1, "/", config.GetServer().Host, true, true)
-			_ = redis.Set(uuid, req.UserName, 1*time.Hour)
-		}
+		util.Login(ctx, req.ID)
 	}
 	ctx.JSON(response.Base.ChangeToGinJson())
 
+}
+
+func logout(ctx *gin.Context) {
+	//交给鉴权
+	util.Logout(ctx)
+	ctx.JSON(util.NewBase(consts.ErrCodeSuccess).ChangeToGinJson())
 }
 
 func changePassword(ctx *gin.Context) {
@@ -67,5 +66,20 @@ func changePassword(ctx *gin.Context) {
 		ctx.JSON(util.NewBase(consts.ErrCodeParameter).ChangeToGinJson())
 		return
 	}
-	ctx.JSON(server.ChangePassword(ctx, req).Base.ChangeToGinJson())
+	firstResponse := server.ValidatePassword(ctx, &ValidatePasswordRequest{
+		ID:       req.ID,
+		PassWord: req.OldPassWord,
+	})
+
+	if firstResponse.Base.Code == consts.ErrCodeSuccess {
+		//校验旧密码
+		secondResponse := server.ChangePassword(ctx, req)
+		if secondResponse.Base.Code == consts.ErrCodeSuccess {
+			util.Login(ctx, req.ID)
+		}
+		ctx.JSON(secondResponse.Base.ChangeToGinJson())
+		return
+	}
+
+	ctx.JSON(firstResponse.Base.ChangeToGinJson())
 }

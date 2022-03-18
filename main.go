@@ -11,13 +11,22 @@ import (
 	"studentScoreManagement/db"
 	"studentScoreManagement/model"
 	"studentScoreManagement/redis"
+	"studentScoreManagement/teacher"
 	"studentScoreManagement/user"
 )
 
 func init() {
+	//初始化
 	config.InitConfig()
 	db.InitDatabase()
-	err := db.GetDatabase().AutoMigrate(&model.User{}, &model.Role{}, &model.UserID2RoleID{})
+	redis.InitRedis()
+
+	//数据库
+	err := db.GetDatabase().AutoMigrate(
+		&model.User{},
+		&model.Role{},
+		&model.UserID2RoleID{},
+		&model.UserInfo{})
 	if err != nil {
 		panic("建表失败" + err.Error())
 	}
@@ -45,7 +54,6 @@ func init() {
 			_ = role.Create()
 		}
 	}
-	redis.InitRedis()
 }
 
 func main() {
@@ -56,6 +64,7 @@ func main() {
 	})
 
 	user.Route(server)
+	teacher.Route(server)
 
 	if err := server.Run(config.GetServer().Host + ":" + config.GetServer().Port); err != nil {
 		panic(fmt.Errorf("服务运行失败 %s", err))

@@ -29,5 +29,5 @@ func (r *UserID2RoleID) Find() (err error) {
 	if r.isValid() == false {
 		return consts.GetError(consts.ErrCodeParameter)
 	}
-	return db.GetDatabase().First(&r, r.UserID).Error
+	return db.GetDatabase().First(r).Error
 }

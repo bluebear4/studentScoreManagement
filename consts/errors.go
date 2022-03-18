@@ -16,6 +16,7 @@ const (
 	ErrCodeValidate
 	ErrCodeUserDuplicate
 	ErrCodeErrorUserOrPassword
+	ErrCodeErrorAuthFail
 
 	//StatusInternalServerError
 	ErrCodeRetry = 20001 + iota
@@ -46,6 +47,8 @@ func GetErrorMsg(code int) string {
 		return "请稍后重试"
 	case ErrCodeErrorUserOrPassword:
 		return "用户名或密码错误"
+	case ErrCodeErrorAuthFail:
+		return "无此操作权限"
 	default:
 		return "未知错误"
 	}

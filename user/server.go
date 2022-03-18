@@ -11,10 +11,8 @@ type Service interface {
 	ChangePassword(ctx *gin.Context, req *ChangePasswordRequest) *ChangePasswordResponse
 }
 
-//ChangePassword(ctx context.Context, req *ChangePasswordRequest) *ChangePasswordResponse
-
 type CreateUserRequest struct {
-	UserName   string `form:"user_name"`
+	ID         string `form:"id"`
 	PassWord   string `form:"pass_word"`
 	RoleID     int    `form:"role_id"`
 	VerifyCode string `form:"verify_code"`
@@ -26,7 +24,7 @@ type CreateUserResponse struct {
 }
 
 type ValidatePasswordRequest struct {
-	UserName string `form:"user_name"`
+	ID       string `form:"id"`
 	PassWord string `form:"pass_word"`
 }
 
@@ -35,7 +33,7 @@ type ValidatePasswordResponse struct {
 }
 
 type ChangePasswordRequest struct {
-	UserName    string `form:"user_name"`
+	ID          string `form:"id"`
 	OldPassWord string `form:"old_pass_word"`
 	NewPassWord string `form:"new_pass_word"`
 }

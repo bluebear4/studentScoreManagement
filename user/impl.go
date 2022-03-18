@@ -42,7 +42,7 @@ func (s *ServiceImpl) CreateUser(_ *gin.Context, req *CreateUserRequest) *Create
 	err := db.GetDatabase().Transaction(func(tx *gorm.DB) error {
 		//用户注册
 		user := &model.User{
-			Name:     req.UserName,
+			ID:       req.ID,
 			PassWord: req.PassWord,
 		}
 		if err := user.Create(); err != nil {
@@ -74,7 +74,7 @@ func (s *ServiceImpl) CreateUser(_ *gin.Context, req *CreateUserRequest) *Create
 
 func (s *ServiceImpl) ValidatePassword(_ *gin.Context, req *ValidatePasswordRequest) *ValidatePasswordResponse {
 	user := &model.User{
-		Name:     req.UserName,
+		ID:       req.ID,
 		PassWord: req.PassWord,
 	}
 	if err := user.Find(); err != nil {
@@ -90,7 +90,7 @@ func (s *ServiceImpl) ValidatePassword(_ *gin.Context, req *ValidatePasswordRequ
 
 func (s *ServiceImpl) ChangePassword(_ *gin.Context, req *ChangePasswordRequest) *ChangePasswordResponse {
 	user := &model.User{
-		Name:     req.UserName,
+		ID:       req.ID,
 		PassWord: req.OldPassWord,
 	}
 	if err := user.UpdatePassword(req.NewPassWord); err != nil {

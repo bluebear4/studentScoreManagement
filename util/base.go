@@ -10,11 +10,16 @@ type Base struct {
 	Message string
 }
 
-func (b *Base) ChangeToGinJson() (httpCode int, H gin.H) {
-	return consts.GetHttpCode(b.Code), gin.H{
+func (b *Base) ChangeToGinJson(extras ...map[string]interface{}) (httpCode int, H gin.H) {
+	extra := map[string]interface{}{
 		"Code":    b.Code,
 		"Message": b.Message,
 	}
+	if len(extras) > 0 {
+		extra["Data"] = extras[0]
+	}
+	return consts.GetHttpCode(b.Code), extra
+
 }
 
 func NewBase(code int, errors ...error) *Base {
@@ -24,7 +29,7 @@ func NewBase(code int, errors ...error) *Base {
 	if len(errors) > 0 {
 		base.Message = errors[0].Error()
 	} else {
-		base.Message = consts.GetError(code).Error()
+		base.Message = consts.GetErrorMsg(code)
 	}
 	return base
 }
