@@ -11,6 +11,7 @@ import (
 	"studentScoreManagement/db"
 	"studentScoreManagement/model"
 	"studentScoreManagement/redis"
+	"studentScoreManagement/scoreView"
 	"studentScoreManagement/teacher"
 	"studentScoreManagement/user"
 )
@@ -65,6 +66,7 @@ func main() {
 
 	user.Route(server)
 	teacher.Route(server)
+	scoreView.Route(server)
 
 	if err := server.Run(config.GetServer().Host + ":" + config.GetServer().Port); err != nil {
 		panic(fmt.Errorf("服务运行失败 %s", err))

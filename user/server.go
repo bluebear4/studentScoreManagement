@@ -12,9 +12,9 @@ type Service interface {
 }
 
 type CreateUserRequest struct {
-	ID         string `form:"id"`
-	PassWord   string `form:"pass_word"`
-	RoleID     int    `form:"role_id"`
+	ID         string `form:"id" binding:"required"`
+	PassWord   string `form:"pass_word" binding:"required"`
+	RoleID     int    `form:"role_id" binding:"required"`
 	VerifyCode string `form:"verify_code"`
 }
 
@@ -24,8 +24,8 @@ type CreateUserResponse struct {
 }
 
 type ValidatePasswordRequest struct {
-	ID       string `form:"id"`
-	PassWord string `form:"pass_word"`
+	ID       string `form:"id" binding:"required"`
+	PassWord string `form:"pass_word" binding:"required"`
 }
 
 type ValidatePasswordResponse struct {
@@ -33,9 +33,9 @@ type ValidatePasswordResponse struct {
 }
 
 type ChangePasswordRequest struct {
-	ID          string `form:"id"`
-	OldPassWord string `form:"old_pass_word"`
-	NewPassWord string `form:"new_pass_word"`
+	ID          string `form:"id" binding:"required"`
+	OldPassWord string `form:"old_pass_word" binding:"required"`
+	NewPassWord string `form:"new_pass_word" binding:"required"`
 }
 
 type ChangePasswordResponse struct {

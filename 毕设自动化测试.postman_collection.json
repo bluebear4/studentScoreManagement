@@ -1,0 +1,498 @@
+{
+	"info": {
+		"_postman_id": "e7020a3b-eae0-4386-a89a-c06ef04dae25",
+		"name": "毕设自动化测试",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "注册",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.environment.set(\"ID\",pm.response.json().Data.ID);\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/user/register?id={{$guid}}&pass_word={{password}}&role_id=2",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"user",
+						"register"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "{{$guid}}"
+						},
+						{
+							"key": "pass_word",
+							"value": "{{password}}"
+						},
+						{
+							"key": "role_id",
+							"value": "2"
+						},
+						{
+							"key": "verify_code",
+							"value": "2",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "登录",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/user/login?id={{ID}}&pass_word={{password}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"user",
+						"login"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "{{ID}}"
+						},
+						{
+							"key": "pass_word",
+							"value": "{{password}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "上传信息",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": "用户信息.xlsx"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{base_url}}/teacher/upload/info",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"teacher",
+						"upload",
+						"info"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "修改密码",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/user/changePassword?id={{ID}}&old_pass_word={{password}}&new_pass_word={{newpassword}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"user",
+						"changePassword"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "{{ID}}"
+						},
+						{
+							"key": "old_pass_word",
+							"value": "{{password}}"
+						},
+						{
+							"key": "new_pass_word",
+							"value": "{{newpassword}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "登出",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/user/logout",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"user",
+						"logout"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "鉴权失败",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": "用户信息.xlsx"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{base_url}}/teacher/upload/info",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"teacher",
+						"upload",
+						"info"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "用新密码登录",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/user/login?id={{ID}}&pass_word={{newpassword}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"user",
+						"login"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "{{ID}}"
+						},
+						{
+							"key": "pass_word",
+							"value": "{{newpassword}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "新增信息",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/teacher/addInfo?user_id=654321&name=梁静茹",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"teacher",
+						"addInfo"
+					],
+					"query": [
+						{
+							"key": "user_id",
+							"value": "654321"
+						},
+						{
+							"key": "name",
+							"value": "梁静茹"
+						},
+						{
+							"key": "class",
+							"value": "？？",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "修改信息",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/teacher/updateInfo?user_id=654321&name=梁静茹&class=2018级网络工程3班",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"teacher",
+						"updateInfo"
+					],
+					"query": [
+						{
+							"key": "user_id",
+							"value": "654321"
+						},
+						{
+							"key": "name",
+							"value": "梁静茹"
+						},
+						{
+							"key": "class",
+							"value": "2018级网络工程3班"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "删除信息",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/teacher/deleteInfo?user_id=654321",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"teacher",
+						"deleteInfo"
+					],
+					"query": [
+						{
+							"key": "user_id",
+							"value": "654321"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "获取班级",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/score/getClass",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"score",
+						"getClass"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "password",
+			"value": "123456",
+			"type": "string"
+		},
+		{
+			"key": "newpassword",
+			"value": "654321",
+			"type": "string"
+		},
+		{
+			"key": "base_url",
+			"value": "127.0.0.1:23333",
+			"type": "string"
+		}
+	]
+}

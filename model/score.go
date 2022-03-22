@@ -5,10 +5,12 @@ import (
 	"studentScoreManagement/db"
 )
 
+type Scores []Score
+
 type Score struct {
 	//学号 工号
-	ID      string  `json:"id,omitempty" gorm:"primary_key"`
-	Subject string  `json:"subject"`
+	ID      string  `json:"id,omitempty" gorm:"primary_key;index:id_subject"`
+	Subject string  `json:"subject" gorm:"index:id_subject"`
 	Score   float64 `json:"score"`
 }
 
@@ -40,4 +42,18 @@ func (s *Score) Update() error {
 		return consts.GetError(consts.ErrCodeParameter)
 	}
 	return db.GetDatabase().Save(s).Error
+}
+
+func (s *Score) Delete() error {
+	if s.isValid() == false {
+		return consts.GetError(consts.ErrCodeParameter)
+	}
+	return db.GetDatabase().Delete(s).Error
+}
+
+func (s *Scores) Find(IDs []string, Subject ...string) error {
+	if len(Subject) > 0 {
+		return db.GetDatabase().Find(s).Where("id IN ? AND subject >= ?", IDs, Subject[0]).Error
+	}
+	return db.GetDatabase().Find(s).Where("id IN ?", IDs).Error
 }
