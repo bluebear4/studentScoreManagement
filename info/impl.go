@@ -1,8 +1,7 @@
-package teacher
+package info
 
 import (
 	"github.com/gin-gonic/gin"
-	"strconv"
 	"studentScoreManagement/consts"
 	"studentScoreManagement/model"
 	"studentScoreManagement/util"
@@ -19,87 +18,21 @@ func init() {
 type ServiceImpl struct {
 }
 
-func (s *ServiceImpl) UploadScore(_ *gin.Context, req *UploadScoreRequest) (response *UploadScoreResponse) {
-	response = &UploadScoreResponse{Base: util.NewBase(consts.ErrCodeSuccess)}
-	xlsx := req.File
-	// 获取excel中具体的列的值
-	rows := xlsx.GetRows("Sheet1")
-	// 循环刚刚获取到的表中的值
-	for key, row := range rows {
-		// 去掉标题行
-		if key > 0 {
-			if len(row) != 3 {
-				response.FailCount++
-				continue
-			}
-			num, err := strconv.ParseFloat(row[2], 64)
-			if err != nil {
-				response.FailCount++
-				continue
-			}
-			score := &model.Score{
-				ID:      row[0],
-				Subject: row[1],
-				Score:   num,
-			}
-			if score.Create() != nil {
-				response.FailCount++
-			} else {
-				response.SuccessCount++
-			}
-		}
-	}
-	return
-}
+func (s ServiceImpl) GetClasses(_ *gin.Context) *GetClassResponse {
 
-func (s *ServiceImpl) AddScore(_ *gin.Context, req *AddScoreRequest) *AddScoreResponse {
-	score := &model.Score{
-		ID:      req.UserID,
-		Subject: req.Subject,
-		Score:   req.Score,
-	}
-	if err := score.Create(); err != nil {
-		return &AddScoreResponse{
-			Base: util.NewBase(consts.ErrCodeFail, err),
-		}
+	var infos model.UserInfos
+	response := &GetClassResponse{}
+
+	if err := infos.GetClass(); err != nil {
+		response.Base = util.NewBase(consts.ErrCodeFail, err)
+		return response
 	}
 
-	return &AddScoreResponse{
-		Base: util.NewBase(consts.ErrCodeSuccess),
+	response.Base = util.NewBase(consts.ErrCodeSuccess)
+	for _, info := range infos {
+		response.Classes = append(response.Classes, info.Class)
 	}
-}
-
-func (s *ServiceImpl) UpdateScore(_ *gin.Context, req *UpdateScoreRequest) *UpdateScoreResponse {
-	score := &model.Score{
-		ID:      req.UserID,
-		Subject: req.Subject,
-		Score:   req.Score,
-	}
-	if err := score.Update(); err != nil {
-		return &UpdateScoreResponse{
-			Base: util.NewBase(consts.ErrCodeFail, err),
-		}
-	}
-
-	return &UpdateScoreResponse{
-		Base: util.NewBase(consts.ErrCodeSuccess),
-	}
-}
-
-func (s *ServiceImpl) DeleteScore(_ *gin.Context, req *DeleteScoreRequest) *DeleteScoreResponse {
-	score := &model.Score{
-		ID:      req.UserID,
-		Subject: req.Subject,
-	}
-	if err := score.Delete(); err != nil {
-		return &DeleteScoreResponse{
-			Base: util.NewBase(consts.ErrCodeFail, err),
-		}
-	}
-
-	return &DeleteScoreResponse{
-		Base: util.NewBase(consts.ErrCodeSuccess),
-	}
+	return response
 }
 
 func (s *ServiceImpl) DeleteInfo(_ *gin.Context, req *DeleteInfoRequest) *DeleteInfoResponse {

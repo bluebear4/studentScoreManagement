@@ -9,9 +9,10 @@ type Scores []Score
 
 type Score struct {
 	//学号 工号
-	ID      string  `json:"id,omitempty" gorm:"primary_key;index:id_subject"`
-	Subject string  `json:"subject" gorm:"index:id_subject"`
-	Score   float64 `json:"score"`
+	Subject string  `json:"subject" gorm:"primary_key"`
+	UserID  string  `json:"user_id,omitempty" gorm:"primary_key"`
+	Name    string  `json:"name" gorm:"not null""`
+	Score   float64 `json:"score" gorm:"not null"`
 }
 
 func (Score) TableName() string {
@@ -19,7 +20,7 @@ func (Score) TableName() string {
 }
 
 func (s *Score) isValid() bool {
-	return s != nil && s.ID != ""
+	return s != nil && s.UserID != ""
 }
 
 func (s *Score) Create() error {
@@ -41,7 +42,7 @@ func (s *Score) Update() error {
 	if s.isValid() == false {
 		return consts.GetError(consts.ErrCodeParameter)
 	}
-	return db.GetDatabase().Save(s).Error
+	return db.GetDatabase().Model(s).Updates(s).Error
 }
 
 func (s *Score) Delete() error {
@@ -53,7 +54,11 @@ func (s *Score) Delete() error {
 
 func (s *Scores) Find(IDs []string, Subject ...string) error {
 	if len(Subject) > 0 {
-		return db.GetDatabase().Find(s).Where("id IN ? AND subject >= ?", IDs, Subject[0]).Error
+		return db.GetDatabase().Find(s).Where("subject >= ?", Subject[0]).Error
 	}
-	return db.GetDatabase().Find(s).Where("id IN ?", IDs).Error
+	return db.GetDatabase().Find(s).Error
+}
+
+func (s *Scores) GetSubjects() error {
+	return db.GetDatabase().Distinct("subject").Find(s).Error
 }

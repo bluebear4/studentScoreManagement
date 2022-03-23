@@ -3,25 +3,10 @@ package user
 import (
 	"github.com/gin-gonic/gin"
 	"studentScoreManagement/consts"
-	"studentScoreManagement/middleware"
 	"studentScoreManagement/util"
 )
 
-func Route(server *gin.Engine) {
-	user := server.Group("/user")
-	{
-		user.POST("/register", register)
-		user.POST("/login", login)
-		user.POST("/logout", middleware.Auth(map[int]bool{
-			consts.RoleIDStudent: true,
-			consts.RoleIDTeacher: true,
-			consts.RoleIDAdmin:   true,
-		}), logout)
-		user.POST("/changePassword", changePassword)
-	}
-}
-
-func register(ctx *gin.Context) {
+func Register(ctx *gin.Context) {
 	req := &CreateUserRequest{}
 
 	if err := ctx.ShouldBind(req); err != nil {
@@ -35,10 +20,10 @@ func register(ctx *gin.Context) {
 		//注册后自动登录
 		util.Login(ctx, req.ID)
 	}
-	ctx.JSON(response.Base.ChangeToGinJson(gin.H{"ID": response.UserID}))
+	ctx.JSON(response.Base.ChangeToGinJson(gin.H{"UserID": response.UserID}))
 }
 
-func login(ctx *gin.Context) {
+func Login(ctx *gin.Context) {
 	req := &ValidatePasswordRequest{}
 
 	if err := ctx.ShouldBind(req); err != nil {
@@ -54,13 +39,7 @@ func login(ctx *gin.Context) {
 
 }
 
-func logout(ctx *gin.Context) {
-	//交给鉴权
-	util.Logout(ctx)
-	ctx.JSON(util.NewBase(consts.ErrCodeSuccess).ChangeToGinJson())
-}
-
-func changePassword(ctx *gin.Context) {
+func ChangePassword(ctx *gin.Context) {
 	req := &ChangePasswordRequest{}
 	if err := ctx.ShouldBind(req); err != nil {
 		ctx.JSON(util.NewBase(consts.ErrCodeParameter).ChangeToGinJson())
@@ -82,4 +61,10 @@ func changePassword(ctx *gin.Context) {
 	}
 
 	ctx.JSON(firstResponse.Base.ChangeToGinJson())
+}
+
+func Logout(ctx *gin.Context) {
+	//交给鉴权
+	util.Logout(ctx)
+	ctx.JSON(util.NewBase(consts.ErrCodeSuccess).ChangeToGinJson())
 }

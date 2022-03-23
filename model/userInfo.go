@@ -10,8 +10,8 @@ type UserInfos []UserInfo
 type UserInfo struct {
 	//学号 工号
 	UserID string `json:"user_id,omitempty" gorm:"primary_key"`
-	Name   string `json:"name,omitempty"`
-	Class  string `json:"class" gorm:"index"`
+	Name   string `json:"name,omitempty" gorm:"not null"`
+	Class  string `json:"class" gorm:"index;not null"`
 }
 
 func (UserInfo) TableName() string {

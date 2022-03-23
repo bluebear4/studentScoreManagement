@@ -10,7 +10,7 @@ import (
 type User struct {
 	//学号 工号
 	ID       string `json:"id,omitempty" gorm:"primary_key"`
-	PassWord string `json:"pass_word,omitempty"`
+	PassWord string `json:"pass_word,omitempty" gorm:"not null"`
 }
 
 func (User) TableName() string {

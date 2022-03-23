@@ -7,7 +7,7 @@ import (
 
 type UserID2RoleID struct {
 	UserID string `json:"user_id,omitempty" gorm:"primary_key"`
-	RoleID int    `json:"role_id,omitempty"`
+	RoleID int    `json:"role_id,omitempty" gorm:"not null"`
 }
 
 func (UserID2RoleID) TableName() string {

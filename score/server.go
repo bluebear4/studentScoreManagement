@@ -1,59 +1,47 @@
-package teacher
+package score
 
 import (
 	"github.com/360EntSecGroup-Skylar/excelize"
 	"github.com/gin-gonic/gin"
+	"studentScoreManagement/model"
 	"studentScoreManagement/util"
 )
 
 type Service interface {
-	UploadInfo(ctx *gin.Context, req *UploadInfoRequest) *UploadInfoResponse
-	AddInfo(ctx *gin.Context, req *AddInfoRequest) *AddInfoResponse
-	UpdateInfo(ctx *gin.Context, req *UpdateInfoRequest) *UpdateInfoResponse
-	DeleteInfo(ctx *gin.Context, req *DeleteInfoRequest) *DeleteInfoResponse
+	GetSubjects(ctx *gin.Context) *GetSubjectResponse
 
-	UploadScore(ctx *gin.Context, req *UploadScoreRequest) *UploadScoreResponse
 	AddScore(ctx *gin.Context, req *AddScoreRequest) *AddScoreResponse
+	UploadScore(ctx *gin.Context, req *UploadScoreRequest) *UploadScoreResponse
 	UpdateScore(ctx *gin.Context, req *UpdateScoreRequest) *UpdateScoreResponse
 	DeleteScore(ctx *gin.Context, req *DeleteScoreRequest) *DeleteScoreResponse
+
+	GetScoresByID(ctx *gin.Context, req *GetScoresByIDRequest) *GetScoresByIDResponse
+	GetScoresByClass(ctx *gin.Context, req *GetScoresByClassRequest) *GetScoresByClassResponse
 }
 
-type UploadInfoRequest struct {
-	File *excelize.File
+type GetScoresByClassRequest struct {
+	Class   string  `form:"class" binding:"required"`
+	Subject *string `form:"subject,omitempty"`
 }
 
-type UploadInfoResponse struct {
-	SuccessCount int
-	FailCount    int
-	Base         *util.Base
+type GetScoresByClassResponse struct {
+	Scores []model.Score
+	Base   *util.Base
 }
 
-type AddInfoRequest struct {
-	UserID string  `form:"user_id" binding:"required"`
-	Name   string  `form:"name" binding:"required"`
-	Class  *string `form:"class,omitempty"`
+type GetScoresByIDRequest struct {
+	ID      string  `form:"id" binding:"required"`
+	Subject *string `form:"subject,omitempty"`
 }
 
-type AddInfoResponse struct {
-	Base *util.Base
+type GetScoresByIDResponse struct {
+	Scores []model.Score
+	Base   *util.Base
 }
 
-type UpdateInfoRequest struct {
-	UserID string  `form:"user_id" binding:"required"`
-	Name   string  `form:"name" binding:"required"`
-	Class  *string `form:"class,omitempty"`
-}
-
-type UpdateInfoResponse struct {
-	Base *util.Base
-}
-
-type DeleteInfoRequest struct {
-	UserID string `form:"user_id" binding:"required"`
-}
-
-type DeleteInfoResponse struct {
-	Base *util.Base
+type GetSubjectResponse struct {
+	Subjects []string
+	Base     *util.Base
 }
 
 type UploadScoreRequest struct {
@@ -68,6 +56,7 @@ type UploadScoreResponse struct {
 
 type AddScoreRequest struct {
 	UserID  string  `form:"user_id" binding:"required"`
+	Name    string  `form:"name" binding:"required"`
 	Subject string  `form:"subject" binding:"required"`
 	Score   float64 `form:"score" binding:"required"`
 }
@@ -79,6 +68,7 @@ type AddScoreResponse struct {
 type UpdateScoreRequest struct {
 	UserID  string  `form:"user_id" binding:"required"`
 	Subject string  `form:"subject" binding:"required"`
+	Name    *string `form:"name"`
 	Score   float64 `form:"score" binding:"required"`
 }
 
