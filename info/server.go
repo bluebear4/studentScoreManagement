@@ -26,9 +26,9 @@ type UploadInfoResponse struct {
 }
 
 type AddInfoRequest struct {
-	UserID string  `form:"user_id" binding:"required"`
-	Name   string  `form:"name" binding:"required"`
-	Class  *string `form:"class,omitempty"`
+	UserID string  `form:"user_id"  binding:"required" json:"user_id,omitempty"`
+	Name   string  `form:"name" binding:"required" json:"name,omitempty"`
+	Class  *string `form:"class,omitempty" json:"class,omitempty"`
 }
 
 type AddInfoResponse struct {
@@ -36,9 +36,9 @@ type AddInfoResponse struct {
 }
 
 type UpdateInfoRequest struct {
-	UserID string  `form:"user_id" binding:"required"`
-	Name   string  `form:"name" binding:"required"`
-	Class  *string `form:"class,omitempty"`
+	UserID string  `form:"user_id"  binding:"required" json:"user_id,omitempty"`
+	Name   string  `form:"name" binding:"required" json:"name,omitempty"`
+	Class  *string `form:"class,omitempty" json:"class,omitempty"`
 }
 
 type UpdateInfoResponse struct {
@@ -46,7 +46,7 @@ type UpdateInfoResponse struct {
 }
 
 type DeleteInfoRequest struct {
-	UserID string `form:"user_id" binding:"required"`
+	UserID string `form:"user_id"  binding:"required" json:"user_id,omitempty"`
 }
 
 type DeleteInfoResponse struct {
@@ -59,7 +59,7 @@ type GetClassResponse struct {
 }
 
 type GetInfoByIDRequest struct {
-	UserID string `form:"user_id" binding:"required"`
+	UserID string `form:"user_id"  binding:"required" json:"user_id,omitempty"`
 }
 
 type GetInfoByIDResponse struct {

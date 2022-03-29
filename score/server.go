@@ -20,8 +20,8 @@ type Service interface {
 }
 
 type GetScoresByClassRequest struct {
-	Class   string  `form:"class" binding:"required"`
-	Subject *string `form:"subject,omitempty"`
+	Class   string  `form:"class"  binding:"required" json:"class,omitempty"`
+	Subject *string `form:"subject,omitempty" json:"subject,omitempty"`
 }
 
 type GetScoresByClassResponse struct {
@@ -30,8 +30,8 @@ type GetScoresByClassResponse struct {
 }
 
 type GetScoresByIDRequest struct {
-	ID      string  `form:"id" binding:"required"`
-	Subject *string `form:"subject,omitempty"`
+	ID      string  `form:"id"  binding:"required" json:"id,omitempty"`
+	Subject *string `form:"subject,omitempty" json:"subject,omitempty"`
 }
 
 type GetScoresByIDResponse struct {
@@ -55,10 +55,10 @@ type UploadScoreResponse struct {
 }
 
 type AddScoreRequest struct {
-	UserID  string  `form:"user_id" binding:"required"`
-	Name    string  `form:"name" binding:"required"`
-	Subject string  `form:"subject" binding:"required"`
-	Score   float64 `form:"score" binding:"required"`
+	UserID  string  `form:"user_id"  binding:"required" json:"user_id,omitempty"`
+	Name    string  `form:"name" binding:"required" json:"name,omitempty"`
+	Subject string  `form:"subject" binding:"required" json:"subject,omitempty"`
+	Score   float64 `form:"score" binding:"required" json:"score,omitempty"`
 }
 
 type AddScoreResponse struct {
@@ -66,10 +66,10 @@ type AddScoreResponse struct {
 }
 
 type UpdateScoreRequest struct {
-	UserID  string  `form:"user_id" binding:"required"`
-	Subject string  `form:"subject" binding:"required"`
-	Name    *string `form:"name"`
-	Score   float64 `form:"score" binding:"required"`
+	UserID  string  `form:"user_id"  binding:"required" json:"user_id,omitempty"`
+	Subject string  `form:"subject" binding:"required" json:"subject,omitempty"`
+	Name    *string `form:"name" json:"name,omitempty"`
+	Score   float64 `form:"score" binding:"required" json:"score,omitempty"`
 }
 
 type UpdateScoreResponse struct {
@@ -77,8 +77,8 @@ type UpdateScoreResponse struct {
 }
 
 type DeleteScoreRequest struct {
-	UserID  string `form:"user_id" binding:"required"`
-	Subject string `form:"subject" binding:"required"`
+	UserID  string `form:"user_id"  binding:"required" json:"user_id,omitempty"`
+	Subject string `form:"subject" binding:"required" json:"subject,omitempty"`
 }
 
 type DeleteScoreResponse struct {

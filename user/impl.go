@@ -21,6 +21,22 @@ func init() {
 type ServiceImpl struct {
 }
 
+func (s *ServiceImpl) ChangeValidateCode(_ *gin.Context, req *ChangeValidateCodeRequest) *ChangeValidateCodeResponse {
+	role := &model.Role{
+		RoleID:   req.RoleID,
+		RoleCode: req.ValidateCode,
+	}
+	if err := role.UpdateRoleCode(); err != nil {
+		return &ChangeValidateCodeResponse{
+			Base: util.NewBase(consts.ErrCodeErrorUserOrPassword, err),
+		}
+	}
+
+	return &ChangeValidateCodeResponse{
+		Base: util.NewBase(consts.ErrCodeSuccess),
+	}
+}
+
 func (s *ServiceImpl) CreateUser(_ *gin.Context, req *CreateUserRequest) *CreateUserResponse {
 
 	role := model.Role{RoleID: req.RoleID}
@@ -31,13 +47,12 @@ func (s *ServiceImpl) CreateUser(_ *gin.Context, req *CreateUserRequest) *Create
 		return &CreateUserResponse{Base: util.NewBase(consts.ErrCodeParameter)}
 	}
 
-	if req.VerifyCode != role.RoleCode {
+	if role.RoleCode != nil && *role.RoleCode != req.VerifyCode {
 		//验证码不对不可注册
 		//由管理员控制修改
 		return &CreateUserResponse{Base: util.NewBase(consts.ErrCodeValidate)}
 	}
 
-	uid := ""
 	//事务
 	err := db.GetDatabase().Transaction(func(tx *gorm.DB) error {
 		//用户注册
@@ -51,8 +66,6 @@ func (s *ServiceImpl) CreateUser(_ *gin.Context, req *CreateUserRequest) *Create
 			}
 			return err
 		}
-
-		uid = user.ID
 		//角色绑定
 		uid2role := &model.UserID2RoleID{
 			UserID: user.ID,
@@ -67,7 +80,7 @@ func (s *ServiceImpl) CreateUser(_ *gin.Context, req *CreateUserRequest) *Create
 	}
 
 	return &CreateUserResponse{
-		UserID: uid,
+		UserID: req.ID,
 		Base:   util.NewBase(consts.ErrCodeSuccess),
 	}
 }

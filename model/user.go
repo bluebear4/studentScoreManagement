@@ -50,6 +50,5 @@ func (u *User) UpdatePassword(newPassword string) error {
 
 	newPassword = fmt.Sprintf("%x", md5.Sum([]byte(newPassword)))
 
-	return db.GetDatabase().First(u).Where("pass_word = ?", u.PassWord).
-		Update("pass_word", newPassword).Error
+	return db.GetDatabase().First(u).Update("pass_word", newPassword).Error
 }

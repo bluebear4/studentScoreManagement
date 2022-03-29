@@ -63,6 +63,16 @@ func ChangePassword(ctx *gin.Context) {
 	ctx.JSON(firstResponse.Base.ChangeToGinJson())
 }
 
+func ChangeValidateCode(ctx *gin.Context) {
+	req := &ChangeValidateCodeRequest{}
+
+	if err := ctx.ShouldBind(req); err != nil {
+		ctx.JSON(util.NewBase(consts.ErrCodeParameter).ChangeToGinJson())
+		return
+	}
+	ctx.JSON(server.ChangeValidateCode(ctx, req).Base.ChangeToGinJson())
+}
+
 func Logout(ctx *gin.Context) {
 	//交给鉴权
 	util.Logout(ctx)

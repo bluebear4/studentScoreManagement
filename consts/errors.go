@@ -55,11 +55,11 @@ func GetErrorMsg(code int) string {
 }
 
 func GetHttpCode(code int) int {
-
 	if code == 0 {
 		return http.StatusOK
 	} else if code < 20001 {
-		return http.StatusBadRequest
+		return http.StatusOK
+		//return http.StatusBadRequest
 	} else {
 		return http.StatusInternalServerError
 	}

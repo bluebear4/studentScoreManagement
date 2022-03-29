@@ -51,9 +51,9 @@ func (s *UserInfo) Delete() error {
 }
 
 func (s *UserInfos) GetClass() error {
-	return db.GetDatabase().Where("class <> ?", "").Distinct("class").Find(s).Error
+	return db.GetDatabase().Distinct("class").Where("class <> ?", "").Find(s).Error
 }
 
 func (s *UserInfos) GetIDByClass(class string) error {
-	return db.GetDatabase().Where("class = ?", class).Distinct("user_id").Find(s).Error
+	return db.GetDatabase().Distinct("user_id").Where("class = ?", class).Find(s).Error
 }

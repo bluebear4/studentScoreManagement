@@ -44,23 +44,54 @@ func init() {
 			{
 				RoleID:   consts.RoleIDAdmin,
 				RoleName: consts.RoleNameAdmin,
+				RoleCode: nil,
 			},
 			{
 				RoleID:   consts.RoleIDTeacher,
 				RoleName: consts.RoleNameTeacher,
+				RoleCode: nil,
 			},
 			{
 				RoleID:   consts.RoleIDStudent,
 				RoleName: consts.RoleNameStudent,
+				RoleCode: nil,
 			},
 		}
 		for _, role := range roles {
 			_ = role.Create()
 		}
 	}
+
+	//hard code 设定管理员
+	admin := &model.User{
+		ID:       "admin",
+		PassWord: "123456",
+	}
+	if err := admin.Find(); errors.Is(err, gorm.ErrRecordNotFound) {
+		err = db.GetDatabase().Transaction(func(tx *gorm.DB) error {
+			if err := admin.Create(); err != nil {
+				panic(err)
+			}
+			//角色绑定
+			uid2role := &model.UserID2RoleID{
+				UserID: admin.ID,
+				RoleID: consts.RoleIDAdmin,
+			}
+			return uid2role.Create()
+		})
+		if err != nil {
+			panic(err)
+		}
+	}
 }
 
 func route(server *gin.Engine) {
+
+	server.GET("/ping", func(c *gin.Context) {
+		c.JSON(http.StatusOK, "pong")
+		return
+	})
+
 	User := server.Group("/user")
 	{
 		User.POST("/register", user.Register)
@@ -102,13 +133,16 @@ func route(server *gin.Engine) {
 			upload.POST("/score", score.UploadScore)
 		}
 	}
+
+	Admin := server.Group("/admin", middleware.Auth(map[int]bool{
+		consts.RoleIDAdmin: true,
+	}))
+	{
+		Admin.POST("/changeValidateCode", user.ChangeValidateCode)
+	}
 }
 func main() {
 	server := gin.Default()
-	server.GET("/ping", func(c *gin.Context) {
-		c.JSON(http.StatusOK, "pong")
-		return
-	})
 
 	route(server)
 

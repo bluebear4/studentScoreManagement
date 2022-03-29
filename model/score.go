@@ -11,7 +11,7 @@ type Score struct {
 	//学号 工号
 	Subject string  `json:"subject" gorm:"primary_key"`
 	UserID  string  `json:"user_id,omitempty" gorm:"primary_key"`
-	Name    string  `json:"name" gorm:"not null""`
+	Name    string  `json:"name" gorm:"not null"`
 	Score   float64 `json:"score" gorm:"not null"`
 }
 
@@ -54,9 +54,10 @@ func (s *Score) Delete() error {
 
 func (s *Scores) Find(IDs []string, Subject ...string) error {
 	if len(Subject) > 0 {
-		return db.GetDatabase().Find(s).Where("subject >= ?", Subject[0]).Error
+		return db.GetDatabase().Where("subject = ? AND user_id IN ?", Subject[0], IDs).Find(s).Error
 	}
-	return db.GetDatabase().Find(s).Error
+	return db.GetDatabase().Where("user_id IN ?", IDs).Find(s).Error
+
 }
 
 func (s *Scores) GetSubjects() error {
