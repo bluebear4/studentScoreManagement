@@ -13,10 +13,10 @@ const (
 	ErrCodeFail
 	ErrCodeParameter = 10001 + iota
 	ErrCodeNotLogin
+	ErrCodeErrorAuthFail
 	ErrCodeValidate
 	ErrCodeUserDuplicate
 	ErrCodeErrorUserOrPassword
-	ErrCodeErrorAuthFail
 
 	//StatusInternalServerError
 	ErrCodeRetry = 20001 + iota

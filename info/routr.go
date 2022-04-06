@@ -66,3 +66,11 @@ func GetClasses(ctx *gin.Context) {
 	}
 	return
 }
+
+func GetInfos(ctx *gin.Context) {
+	req := &GetInfosRequest{}
+	response := server.GetInfos(ctx, req)
+	ctx.JSON(response.Base.ChangeToGinJson(gin.H{
+		"infos": response.Infos,
+	}))
+}

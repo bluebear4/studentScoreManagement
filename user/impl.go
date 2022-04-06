@@ -21,22 +21,6 @@ func init() {
 type ServiceImpl struct {
 }
 
-func (s *ServiceImpl) ChangeValidateCode(_ *gin.Context, req *ChangeValidateCodeRequest) *ChangeValidateCodeResponse {
-	role := &model.Role{
-		RoleID:   req.RoleID,
-		RoleCode: req.ValidateCode,
-	}
-	if err := role.UpdateRoleCode(); err != nil {
-		return &ChangeValidateCodeResponse{
-			Base: util.NewBase(consts.ErrCodeErrorUserOrPassword, err),
-		}
-	}
-
-	return &ChangeValidateCodeResponse{
-		Base: util.NewBase(consts.ErrCodeSuccess),
-	}
-}
-
 func (s *ServiceImpl) CreateUser(_ *gin.Context, req *CreateUserRequest) *CreateUserResponse {
 
 	role := model.Role{RoleID: req.RoleID}
@@ -102,8 +86,11 @@ func (s *ServiceImpl) ValidatePassword(_ *gin.Context, req *ValidatePasswordRequ
 }
 
 func (s *ServiceImpl) ChangePassword(_ *gin.Context, req *ChangePasswordRequest) *ChangePasswordResponse {
+	if req.ID == nil {
+		return &ChangePasswordResponse{Base: util.NewBase(consts.ErrCodeParameter)}
+	}
 	user := &model.User{
-		ID:       req.ID,
+		ID:       *req.ID,
 		PassWord: req.OldPassWord,
 	}
 	if err := user.UpdatePassword(req.NewPassWord); err != nil {

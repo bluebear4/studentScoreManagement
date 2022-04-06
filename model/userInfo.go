@@ -50,6 +50,10 @@ func (s *UserInfo) Delete() error {
 	return db.GetDatabase().Delete(s).Error
 }
 
+func (s *UserInfos) GetAll() error {
+	return db.GetDatabase().Find(s).Error
+}
+
 func (s *UserInfos) GetClass() error {
 	return db.GetDatabase().Distinct("class").Where("class <> ?", "").Find(s).Error
 }

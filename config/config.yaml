@@ -1,15 +1,15 @@
 server:
   name: 学生成绩管理
-  host: 127.0.0.1
+  host: localhost
   port: 23333
 database:
   username: root
   password: Mysql
-  host: 127.0.0.1
+  host: localhost
   port: 3306
   dbname: 学生成绩管理
   timeout: 10s
 redis:
-  host: 127.0.0.1
+  host: localhost
   port: 6379
   password:

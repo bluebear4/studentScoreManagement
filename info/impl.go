@@ -18,6 +18,20 @@ func init() {
 type ServiceImpl struct {
 }
 
+func (s *ServiceImpl) GetInfos(_ *gin.Context, _ *GetInfosRequest) *GetInfosResponse {
+	infos := &model.UserInfos{}
+	if err := infos.GetAll(); err != nil {
+		return &GetInfosResponse{
+			Base: util.NewBase(consts.ErrCodeFail, err),
+		}
+	}
+
+	return &GetInfosResponse{
+		Infos: *infos,
+		Base:  util.NewBase(consts.ErrCodeSuccess),
+	}
+}
+
 func (s ServiceImpl) GetClasses(_ *gin.Context) *GetClassResponse {
 
 	var infos model.UserInfos

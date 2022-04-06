@@ -55,7 +55,7 @@ func DeleteScore(ctx *gin.Context) {
 	ctx.JSON(server.DeleteScore(ctx, req).Base.ChangeToGinJson())
 }
 
-func GetSubjects(ctx *gin.Context) {
+func _(ctx *gin.Context) {
 	response := server.GetSubjects(ctx)
 	if response.Base.Code == consts.ErrCodeSuccess {
 		ctx.JSON(response.Base.ChangeToGinJson(gin.H{
@@ -66,8 +66,22 @@ func GetSubjects(ctx *gin.Context) {
 	}
 	return
 }
+func GetScores(ctx *gin.Context) {
+	req := &GetScoresByIDRequest{}
+	if id, err := util.GetUserID(ctx); err != nil {
+		ctx.JSON(util.NewBase(consts.ErrCodeParameter).ChangeToGinJson())
+		return
+	} else {
+		req.ID = id
+	}
 
-func GetScoresByID(ctx *gin.Context) {
+	response := server.GetScoresByID(ctx, req)
+	ctx.JSON(response.Base.ChangeToGinJson(gin.H{
+		"scores": response.Scores,
+	}))
+}
+
+func _(ctx *gin.Context) {
 	req := &GetScoresByIDRequest{}
 	if err := ctx.ShouldBind(req); err != nil {
 		ctx.JSON(util.NewBase(consts.ErrCodeParameter).ChangeToGinJson())

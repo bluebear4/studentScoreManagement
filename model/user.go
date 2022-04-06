@@ -21,7 +21,7 @@ func (u *User) isValid() bool {
 	return u != nil && u.ID != "" && u.PassWord != ""
 }
 
-func (u *User) Create() error {
+func (u User) Create() error {
 	if u.isValid() == false {
 		return consts.GetError(consts.ErrCodeParameter)
 	}
@@ -37,10 +37,9 @@ func (u *User) Find() error {
 		return consts.GetError(consts.ErrCodeParameter)
 	}
 
-	u.PassWord = fmt.Sprintf("%x", md5.Sum([]byte(u.PassWord)))
+	passWord := fmt.Sprintf("%x", md5.Sum([]byte(u.PassWord)))
 
-	return db.GetDatabase().First(u).
-		Where("id = ? and pass_word = ?", u.ID, u.PassWord).Error
+	return db.GetDatabase().First(u, "id = ? and pass_word = ?", u.ID, passWord).Error
 }
 
 func (u *User) UpdatePassword(newPassword string) error {

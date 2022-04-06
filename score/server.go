@@ -20,7 +20,7 @@ type Service interface {
 }
 
 type GetScoresByClassRequest struct {
-	Class   string  `form:"class"  binding:"required" json:"class,omitempty"`
+	Class   *string `form:"class"  json:"class,omitempty"`
 	Subject *string `form:"subject,omitempty" json:"subject,omitempty"`
 }
 
@@ -30,7 +30,7 @@ type GetScoresByClassResponse struct {
 }
 
 type GetScoresByIDRequest struct {
-	ID      string  `form:"id"  binding:"required" json:"id,omitempty"`
+	ID      string  `form:"id" json:"id,omitempty"`
 	Subject *string `form:"subject,omitempty" json:"subject,omitempty"`
 }
 

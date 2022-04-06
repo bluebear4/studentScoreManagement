@@ -9,7 +9,6 @@ type Service interface {
 	CreateUser(ctx *gin.Context, req *CreateUserRequest) *CreateUserResponse
 	ValidatePassword(ctx *gin.Context, req *ValidatePasswordRequest) *ValidatePasswordResponse
 	ChangePassword(ctx *gin.Context, req *ChangePasswordRequest) *ChangePasswordResponse
-	ChangeValidateCode(ctx *gin.Context, req *ChangeValidateCodeRequest) *ChangeValidateCodeResponse
 }
 
 type CreateUserRequest struct {
@@ -34,20 +33,11 @@ type ValidatePasswordResponse struct {
 }
 
 type ChangePasswordRequest struct {
-	ID          string `form:"id"  binding:"required" json:"id,omitempty"`
-	OldPassWord string `form:"old_pass_word" binding:"required" json:"old_pass_word,omitempty"`
-	NewPassWord string `form:"new_pass_word" binding:"required" json:"new_pass_word,omitempty"`
+	ID          *string `form:"id"  json:"id,omitempty"`
+	OldPassWord string  `form:"old_pass_word" binding:"required" json:"old_pass_word,omitempty"`
+	NewPassWord string  `form:"new_pass_word" binding:"required" json:"new_pass_word,omitempty"`
 }
 
 type ChangePasswordResponse struct {
-	Base *util.Base
-}
-
-type ChangeValidateCodeRequest struct {
-	RoleID       int     `form:"role_id"  binding:"required" json:"role_id,omitempty"`
-	ValidateCode *string `form:"validate_code" json:"validate_code,omitempty"`
-}
-
-type ChangeValidateCodeResponse struct {
 	Base *util.Base
 }

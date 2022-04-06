@@ -1,6 +1,7 @@
 package main
 
 import (
+	"crypto/md5"
 	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
@@ -13,6 +14,7 @@ import (
 	"studentScoreManagement/middleware"
 	"studentScoreManagement/model"
 	"studentScoreManagement/redis"
+	"studentScoreManagement/role"
 	"studentScoreManagement/score"
 	"studentScoreManagement/user"
 )
@@ -65,7 +67,7 @@ func init() {
 	//hard code 设定管理员
 	admin := &model.User{
 		ID:       "admin",
-		PassWord: "123456",
+		PassWord: fmt.Sprintf("%x", md5.Sum([]byte("123456"))),
 	}
 	if err := admin.Find(); errors.Is(err, gorm.ErrRecordNotFound) {
 		err = db.GetDatabase().Transaction(func(tx *gorm.DB) error {
@@ -96,7 +98,7 @@ func route(server *gin.Engine) {
 	{
 		User.POST("/register", user.Register)
 		User.POST("/login", user.Login)
-		User.POST("/changePassword", user.ChangePassword)
+
 	}
 
 	Student := server.Group("/student", middleware.Auth(map[int]bool{
@@ -105,13 +107,11 @@ func route(server *gin.Engine) {
 		consts.RoleIDAdmin:   true,
 	}))
 	{
+
 		Student.POST("/logout", user.Logout)
+		Student.POST("/changePassword", user.ChangePassword)
+		Student.GET("/getScores", score.GetScores)
 
-		Student.POST("/getScoresByID", score.GetScoresByID)
-		Student.POST("/getScoresByClass", score.GetScoresByClass)
-
-		Student.GET("/getClasses", info.GetClasses)
-		Student.GET("/getSubjects", score.GetSubjects)
 	}
 
 	Teacher := server.Group("/teacher", middleware.Auth(map[int]bool{
@@ -119,6 +119,10 @@ func route(server *gin.Engine) {
 		consts.RoleIDAdmin:   true,
 	}))
 	{
+		Teacher.GET("/getClasses", info.GetClasses)
+		Teacher.GET("/getScoresByClass", score.GetScoresByClass)
+
+		Teacher.GET("/getInfos", info.GetInfos)
 		Teacher.POST("/addInfo", info.AddInfo)
 		Teacher.POST("/updateInfo", info.UpdateInfo)
 		Teacher.POST("/deleteInfo", info.DeleteInfo)
@@ -138,7 +142,9 @@ func route(server *gin.Engine) {
 		consts.RoleIDAdmin: true,
 	}))
 	{
-		Admin.POST("/changeValidateCode", user.ChangeValidateCode)
+		//GetValidateCode
+		Admin.GET("/getValidateCode", role.GetValidateCode)
+		Admin.POST("/changeValidateCode", role.ChangeValidateCode)
 	}
 }
 func main() {

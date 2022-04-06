@@ -57,9 +57,12 @@ func (s *Scores) Find(IDs []string, Subject ...string) error {
 		return db.GetDatabase().Where("subject = ? AND user_id IN ?", Subject[0], IDs).Find(s).Error
 	}
 	return db.GetDatabase().Where("user_id IN ?", IDs).Find(s).Error
-
 }
 
 func (s *Scores) GetSubjects() error {
 	return db.GetDatabase().Distinct("subject").Find(s).Error
+}
+
+func (s *Scores) FindAll() error {
+	return db.GetDatabase().Find(s).Error
 }

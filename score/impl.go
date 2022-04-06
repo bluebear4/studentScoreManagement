@@ -150,29 +150,30 @@ func (s ServiceImpl) GetScoresByClass(_ *gin.Context, req *GetScoresByClassReque
 		Scores: nil,
 		Base:   nil,
 	}
-
-	if err := infos.GetIDByClass(req.Class); err != nil {
-		response.Base = util.NewBase(consts.ErrCodeFail, err)
-		return response
-	}
-	var ids []string
-	for _, info := range infos {
-		ids = append(ids, info.UserID)
-	}
-
 	var scores model.Scores
 	var err error
-	if req.Subject != nil {
-		err = scores.Find(ids, *req.Subject)
-	} else {
-		err = scores.Find(ids)
-	}
+	if req.Class != nil {
+		if err := infos.GetIDByClass(*req.Class); err != nil {
+			response.Base = util.NewBase(consts.ErrCodeFail, err)
+			return response
+		}
+		var ids []string
+		for _, info := range infos {
+			ids = append(ids, info.UserID)
+		}
 
+		if req.Subject != nil {
+			err = scores.Find(ids, *req.Subject)
+		} else {
+			err = scores.Find(ids)
+		}
+	} else {
+		err = scores.FindAll()
+	}
 	if err != nil {
 		response.Base = util.NewBase(consts.ErrCodeFail, err)
 		return response
 	}
-
 	return &GetScoresByClassResponse{
 		Scores: scores,
 		Base:   util.NewBase(consts.ErrCodeSuccess),

@@ -3,6 +3,7 @@ package info
 import (
 	"github.com/360EntSecGroup-Skylar/excelize"
 	"github.com/gin-gonic/gin"
+	"studentScoreManagement/model"
 	"studentScoreManagement/util"
 )
 
@@ -11,6 +12,7 @@ type Service interface {
 	AddInfo(ctx *gin.Context, req *AddInfoRequest) *AddInfoResponse
 	UpdateInfo(ctx *gin.Context, req *UpdateInfoRequest) *UpdateInfoResponse
 	DeleteInfo(ctx *gin.Context, req *DeleteInfoRequest) *DeleteInfoResponse
+	GetInfos(ctx *gin.Context, req *GetInfosRequest) *GetInfosResponse
 
 	GetClasses(ctx *gin.Context) *GetClassResponse
 }
@@ -58,10 +60,10 @@ type GetClassResponse struct {
 	Base    *util.Base
 }
 
-type GetInfoByIDRequest struct {
-	UserID string `form:"user_id"  binding:"required" json:"user_id,omitempty"`
+type GetInfosRequest struct {
 }
 
-type GetInfoByIDResponse struct {
-	Base *util.Base
+type GetInfosResponse struct {
+	Infos model.UserInfos
+	Base  *util.Base
 }

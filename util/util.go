@@ -22,9 +22,9 @@ func Login(ctx *gin.Context, id string) {
 	Logout(ctx)
 
 	uuid := uuid.New().String()
-	ctx.SetCookie(consts.CookieAuth, uuid, 3600*24, "/", config.GetServer().Host, false, true)
-	_ = redis.Set(uuid, id, 1*time.Hour)
-	_ = redis.Set(id, uuid, 1*time.Hour)
+	ctx.SetCookie(consts.CookieAuth, uuid, 3600*24, "/", config.GetServer().Host, false, false)
+	_ = redis.Set(uuid, id, 24*time.Hour)
+	_ = redis.Set(id, uuid, 24*time.Hour)
 }
 
 func Logout(ctx *gin.Context) {
