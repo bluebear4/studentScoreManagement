@@ -31,7 +31,7 @@ func (s *ServiceImpl) CreateUser(_ *gin.Context, req *CreateUserRequest) *Create
 		return &CreateUserResponse{Base: util.NewBase(consts.ErrCodeParameter)}
 	}
 
-	if role.RoleCode != nil && *role.RoleCode != req.VerifyCode {
+	if role.RoleCode != req.VerifyCode {
 		//验证码不对不可注册
 		//由管理员控制修改
 		return &CreateUserResponse{Base: util.NewBase(consts.ErrCodeValidate)}

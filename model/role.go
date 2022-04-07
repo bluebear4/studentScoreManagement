@@ -6,9 +6,9 @@ import (
 )
 
 type Role struct {
-	RoleID   int     `json:"role_id,omitempty" gorm:"primary_key;not null;comment:'0:管理员 1:教师 2:学生'"`
-	RoleName string  `json:"role_name,omitempty" gorm:"not null"`
-	RoleCode *string `json:"role_code,omitempty" gorm:"comment:'注册教师需要管理员的验证码'"`
+	RoleID   int    `json:"role_id,omitempty" gorm:"primary_key;not null;comment:'0:管理员 1:教师 2:学生'"`
+	RoleName string `json:"role_name,omitempty" gorm:"not null"`
+	RoleCode string `json:"role_code,omitempty" gorm:"comment:'注册教师需要管理员的验证码'"`
 }
 
 func (Role) TableName() string {

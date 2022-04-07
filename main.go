@@ -46,17 +46,17 @@ func init() {
 			{
 				RoleID:   consts.RoleIDAdmin,
 				RoleName: consts.RoleNameAdmin,
-				RoleCode: nil,
+				RoleCode: "",
 			},
 			{
 				RoleID:   consts.RoleIDTeacher,
 				RoleName: consts.RoleNameTeacher,
-				RoleCode: nil,
+				RoleCode: "",
 			},
 			{
 				RoleID:   consts.RoleIDStudent,
 				RoleName: consts.RoleNameStudent,
-				RoleCode: nil,
+				RoleCode: "",
 			},
 		}
 		for _, role := range roles {

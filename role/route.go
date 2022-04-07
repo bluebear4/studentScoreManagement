@@ -13,7 +13,10 @@ func GetValidateCode(ctx *gin.Context) {
 		ctx.JSON(util.NewBase(consts.ErrCodeParameter).ChangeToGinJson())
 		return
 	}
-	ctx.JSON(server.GetValidateCode(ctx, req).Base.ChangeToGinJson())
+	response := server.GetValidateCode(ctx, req)
+	ctx.JSON(response.Base.ChangeToGinJson(gin.H{
+		"ValidateCode": response.ValidateCode,
+	}))
 }
 
 func ChangeValidateCode(ctx *gin.Context) {

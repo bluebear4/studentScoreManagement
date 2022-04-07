@@ -12,8 +12,8 @@ type Service interface {
 }
 
 type ChangeValidateCodeRequest struct {
-	RoleID       int     `form:"role_id"  binding:"required" json:"role_id,omitempty"`
-	ValidateCode *string `form:"validate_code" json:"validate_code,omitempty"`
+	RoleID       int    `form:"role_id"  binding:"required" json:"role_id,omitempty"`
+	ValidateCode string `form:"validate_code" json:"validate_code,omitempty"`
 }
 
 type ChangeValidateCodeResponse struct {
@@ -25,7 +25,7 @@ type GetValidateCodeRequest struct {
 }
 
 type GetValidateCodeResponse struct {
-	ValidateCode *string
+	ValidateCode string
 	Base         *util.Base
 }
 
